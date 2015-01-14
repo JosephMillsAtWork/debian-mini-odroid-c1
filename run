@@ -1,0 +1,25 @@
+#!/usr/bin/env bash 
+##
+## sinmple script that installs the dependencys for buildiung the c1 debiain image
+##
+##
+
+
+
+arch=$(uname -a | awk '{print $9}')
+
+
+
+if [[ $arch == "x86_64" ]];
+then 
+    sudo dpkg --add-architecture i386;
+    sudo apt-get update 
+    sudo apt-get -y install libc6:i386 libncurses5:i386 libstdc++6:i386 lib32z1
+fi
+
+sudo apt-get -y install build-essential wget git lzop u-boot-tools binfmt-support qemu qemu-user-static debootstrap parted
+
+clear 
+echo "building the c1 image"
+
+make

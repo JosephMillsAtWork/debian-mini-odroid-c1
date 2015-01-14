@@ -43,14 +43,14 @@ $(ROOTFS_DIR): $(ROOTFS_DIR).base
 	mount -o bind /proc $@/proc
 	mount -o bind /sys $@/sys
 	mount -o bind /dev $@/dev
-	cp postinstall.sh $@
+	cp postinstall $@
 	if [ -d "postinst" ]; then cp -r postinst $@ ; fi
-	chroot $@ /bin/bash -c "/postinstall.sh $(DIST) $(DIST_URL) $(LINUX_VERSION)"
+	chroot $@ /bin/bash -c "/postinstall $(DIST) $(DIST_URL) $(LINUX_VERSION)"
 	for i in patches/*.patch ; do patch -p0 -d $@ < $$i ; done
 	umount $@/proc
 	umount $@/sys
 	umount $@/dev
-	rm $@/postinstall.sh
+	rm $@/postinstall
 	rm -rf $@/postinst/
 	rm $@/usr/bin/qemu-arm-static
 	touch $@
@@ -60,7 +60,7 @@ $(RAMDISK_FILE): $(ROOTFS_DIR)
 
 $(IMAGE_FILE): $(ROOTFS_DIR) $(RAMDISK_FILE)
 	if test -f "$@.tmp"; then rm "$@.tmp" ; fi
-	./createimg.sh $@.tmp 32 768 $(BOOT_DIR) $(ROOTFS_DIR) $(UBOOT_BIN_DIR) $(RAMDISK_FILE)
+	./createimg $@.tmp 32 768 $(BOOT_DIR) $(ROOTFS_DIR) $(UBOOT_BIN_DIR) $(RAMDISK_FILE)
 	mv $@.tmp $@
 	touch $@
 
